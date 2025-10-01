@@ -1,0 +1,17 @@
+{
+  "name": "arekatika-backend",
+  "version": "1.0.0",
+  "description": "Backend for AreKatika Meat App",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cashfree-pg": "^5.0.8",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^4.17.1",
+    "socket.io": "^4.4.0"
+  }
+}

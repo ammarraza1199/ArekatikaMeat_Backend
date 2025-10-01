@@ -6,7 +6,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 const fs = require('fs');
 const path = require('path');
-const { Cashfree } = require('cashfree-pg-sdk-nodejs');
+const { Cashfree, Environment } = require('cashfree-pg-sdk-nodejs');
 
 const app = express();
 const server = http.createServer(app);

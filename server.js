@@ -366,7 +366,8 @@ app.post('/api/payment/create-order', async (req, res) => {
             }
         };
 
-        const response = await CashfreeSDK.CFPaymentGateway.orders.create(request);
+        const ordersApi = new CashfreeSDK.OrdersApi();
+        const response = await ordersApi.createOrder("2023-08-01", request);
         res.json(response.data);
     } catch (error) {
         const cfErrorData = error?.response?.data || error?.message || error;
@@ -385,7 +386,8 @@ app.get('/api/payment/success', async (req, res) => {
             return res.status(404).json({ message: 'Order not found' });
         }
 
-        const response = await CashfreeSDK.CFPaymentGateway.orders.getPayments(order_id);
+        const ordersApi = new CashfreeSDK.OrdersApi();
+        const response = await ordersApi.getPaymentsForOrder("2023-08-01", order_id);
 
         if (response.data[0].payment_status === "SUCCESS") {
             db.orders[orderIndex].status = "Paid";

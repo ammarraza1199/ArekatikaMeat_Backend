@@ -6,7 +6,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 const fs = require('fs');
 const path = require('path');
-const { Cashfree } = require('cashfree-pg-sdk-nodejs');
+const CashfreeSDK = require('cashfree-pg-sdk-nodejs');
 
 const app = express();
 const server = http.createServer(app);
@@ -30,9 +30,9 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(express.static(path.join(__dirname, '..'))); // Serve files from project root
 app.use(express.static(path.join(__dirname, '../assets')));
 
-Cashfree.XClientId = process.env.CASHFREE_APP_ID;
-Cashfree.XClientSecret = process.env.CASHFREE_SECRET_KEY;
-Cashfree.XEnvironment = process.env.CASHFREE_ENV === 'PRODUCTION' ? Cashfree.Environment.PRODUCTION : Cashfree.Environment.SANDBOX;
+CashfreeSDK.Cashfree.XClientId = process.env.CASHFREE_APP_ID;
+CashfreeSDK.Cashfree.XClientSecret = process.env.CASHFREE_SECRET_KEY;
+CashfreeSDK.Cashfree.XEnvironment = process.env.CASHFREE_ENV === 'PRODUCTION' ? CashfreeSDK.Cashfree.Environment.PRODUCTION : CashfreeSDK.Cashfree.Environment.SANDBOX;
 
 // Function to read the database
 const readDB = () => {
@@ -365,7 +365,7 @@ app.post('/api/payment/create-order', async (req, res) => {
             }
         };
 
-        const response = await Cashfree.orders.create(request);
+        const response = await CashfreeSDK.Cashfree.orders.create(request);
         res.json(response.data);
     } catch (error) {
         const cfErrorData = error?.response?.data || error?.message || error;
@@ -384,7 +384,7 @@ app.get('/api/payment/success', async (req, res) => {
             return res.status(404).json({ message: 'Order not found' });
         }
 
-        const response = await Cashfree.orders.getPayments(order_id);
+        const response = await CashfreeSDK.Cashfree.orders.getPayments(order_id);
 
         if (response.data[0].payment_status === "SUCCESS") {
             db.orders[orderIndex].status = "Paid";

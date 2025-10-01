@@ -7,6 +7,7 @@ const { Server } = require('socket.io');
 const fs = require('fs');
 const path = require('path');
 const CashfreeSDK = require('cashfree-pg-sdk-nodejs');
+console.log('CashfreeSDK:', CashfreeSDK);
 
 const app = express();
 const server = http.createServer(app);

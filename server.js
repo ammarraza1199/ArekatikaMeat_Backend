@@ -33,7 +33,7 @@ app.use(express.static(path.join(__dirname, '../assets')));
 
 CashfreeSDK.CFConfig.XClientId = process.env.CASHFREE_APP_ID;
 CashfreeSDK.CFConfig.XClientSecret = process.env.CASHFREE_SECRET_KEY;
-CashfreeSDK.CFConfig.XEnvironment = process.env.CASHFREE_ENV === 'PRODUCTION' ? CashfreeSDK.CFEnvironment.PRODUCTION : CashfreeSDK.CFEnvironment.SANDBOX;
+CashfreeSDK.CFConfig.XEnvironment = process.env.CASHFREE_ENV === 'PRODUCTION' ? CashfreeSDK.CFEnvironment.PRODUCTION : 'https://api.cashfree.com/pg';
 
 // Function to read the database
 const readDB = () => {

@@ -372,7 +372,7 @@ app.post('/api/payment/create-order', async (req, res) => {
     } catch (error) {
         const cfErrorData = error?.response?.data || error?.message || error;
         console.error("Error creating payment order:", cfErrorData);
-        res.status(500).json({ message: "Failed to create payment order", error: typeof cfErrorData === 'object' ? JSON.stringify(cfErrorData) : cfErrorData });
+        res.status(500).json({ message: "Failed to create payment order", error: { name: error.name, message: error.message, stack: error.stack } });
     }
 });
 

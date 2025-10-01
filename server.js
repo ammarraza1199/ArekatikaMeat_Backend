@@ -30,11 +30,9 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(express.static(path.join(__dirname, '..'))); // Serve files from project root
 app.use(express.static(path.join(__dirname, '../assets')));
 
-const cashfree = new Cashfree({
-  "XClientId": process.env.CASHFREE_APP_ID,
-  "XClientSecret": process.env.CASHFREE_SECRET_KEY,
-  "XEnvironment": process.env.CASHFREE_ENV === 'PRODUCTION' ? Cashfree.Environment.PRODUCTION : Cashfree.Environment.SANDBOX
-});
+Cashfree.XClientId = process.env.CASHFREE_APP_ID;
+Cashfree.XClientSecret = process.env.CASHFREE_SECRET_KEY;
+Cashfree.XEnvironment = process.env.CASHFREE_ENV === 'PRODUCTION' ? Cashfree.Environment.PRODUCTION : Cashfree.Environment.SANDBOX;
 
 // Function to read the database
 const readDB = () => {
@@ -367,7 +365,7 @@ app.post('/api/payment/create-order', async (req, res) => {
             }
         };
 
-        const response = await cashfree.orders.create(request);
+        const response = await Cashfree.orders.create(request);
         res.json(response.data);
     } catch (error) {
         const cfErrorData = error?.response?.data || error?.message || error;
@@ -386,7 +384,7 @@ app.get('/api/payment/success', async (req, res) => {
             return res.status(404).json({ message: 'Order not found' });
         }
 
-        const response = await cashfree.orders.getPayments(order_id);
+        const response = await Cashfree.orders.getPayments(order_id);
 
         if (response.data[0].payment_status === "SUCCESS") {
             db.orders[orderIndex].status = "Paid";

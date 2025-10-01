@@ -365,18 +365,13 @@ app.post('/api/payment/create-order', async (req, res) => {
                 "return_url": `https://arekatikameat-backend1.onrender.com/api/payment/success?order_id=${orderId}`
             }
         };
-        console.log('Cashfree Config:', {
-            XClientId: CashfreeSDK.CFConfig.XClientId,
-            XClientSecret: CashfreeSDK.CFConfig.XClientSecret ? '********' : '' , // Mask secret key
-            XEnvironment: CashfreeSDK.CFConfig.XEnvironment
-        });
         const ordersApi = new CashfreeSDK.OrdersApi();
         const response = await ordersApi.createOrder("2023-08-01", request);
         res.json(response.data);
     } catch (error) {
         const cfErrorData = error?.response?.data || error?.message || error;
         console.error("Error creating payment order:", cfErrorData, error.response);
-        res.status(500).json({ message: "Failed to create payment order", error: error ? (typeof error === 'object' ? JSON.stringify({ name: error.name, message: error.message, stack: error.stack, data: error.response?.data }) : error) : "Unknown error" });
+        res.status(500).json({ message: "Failed to create payment order", error: { name: error.name, message: error.message, stack: error.stack } });
     }
 });
 

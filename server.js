@@ -19,7 +19,13 @@ const io = new Server(server, {
 const PORT = process.env.PORT || 3000;
 const DB_FILE = './db.json';
 
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: false
+}));
+app.options('*', cors());
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(express.static(path.join(__dirname, '..'))); // Serve files from project root
 app.use(express.static(path.join(__dirname, '../assets')));
@@ -361,7 +367,7 @@ app.post('/api/payment/create-order', async (req, res) => {
                 "customer_phone": "9000000000"
             },
             "order_meta": {
-                "return_url": `http://localhost:3000/api/payment/success?order_id=${orderId}`
+                "return_url": `https://arekatikameat-backend1.onrender.com/api/payment/success?order_id=${orderId}`
             }
         };
 

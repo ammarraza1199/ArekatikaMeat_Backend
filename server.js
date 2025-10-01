@@ -6,7 +6,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 const fs = require('fs');
 const path = require('path');
-const { Cashfree } = require('cashfree-pg');
+const { Cashfree } = require('cashfree-pg-sdk-nodejs');
 
 const app = express();
 const server = http.createServer(app);
@@ -30,14 +30,10 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(express.static(path.join(__dirname, '..'))); // Serve files from project root
 app.use(express.static(path.join(__dirname, '../assets')));
 
-const providedEnv = (process.env.CASHFREE_ENV || '').toUpperCase();
-const inferredEnv = (process.env.CASHFREE_SECRET_KEY || '').toLowerCase().includes('test') ? 'SANDBOX' : 'PRODUCTION';
-const cashfreeEnvironment = (providedEnv === 'SANDBOX' || providedEnv === 'PRODUCTION') ? providedEnv : inferredEnv;
-console.log('Cashfree environment:', cashfreeEnvironment);
 const cashfree = new Cashfree({
   "XClientId": process.env.CASHFREE_APP_ID,
   "XClientSecret": process.env.CASHFREE_SECRET_KEY,
-  "XEnvironment": cashfreeEnvironment,
+  "XEnvironment": process.env.CASHFREE_ENV === 'PRODUCTION' ? Cashfree.Environment.PRODUCTION : Cashfree.Environment.SANDBOX
 });
 
 // Function to read the database
@@ -371,20 +367,8 @@ app.post('/api/payment/create-order', async (req, res) => {
             }
         };
 
-        const response = await cashfree.PGCreateOrder("2023-08-01", request);
-        if (response?.status !== 200) {
-            console.error('Cashfree create order non-200:', response?.status, response?.data);
-        }
-        const data = response?.data || {};
-
-        // Derive a payment link for redirect from payment_session_id
-        const sessionId = data.payment_session_id;
-        const baseUrl = cashfreeEnvironment === 'PRODUCTION'
-          ? 'https://payments.cashfree.com/order/#'
-          : 'https://payments-test.cashfree.com/order/#';
-        const payment_link = sessionId ? `${baseUrl}${sessionId}` : undefined;
-
-        res.json({ ...data, payment_link });
+        const response = await cashfree.orders.create(request);
+        res.json(response.data);
     } catch (error) {
         const cfErrorData = error?.response?.data || error?.message || error;
         console.error("Error creating payment order:", cfErrorData);
@@ -402,7 +386,7 @@ app.get('/api/payment/success', async (req, res) => {
             return res.status(404).json({ message: 'Order not found' });
         }
 
-        const response = await cashfree.PGOrderFetchPayments("2023-08-01", order_id);
+        const response = await cashfree.orders.getPayments(order_id);
 
         if (response.data[0].payment_status === "SUCCESS") {
             db.orders[orderIndex].status = "Paid";

@@ -363,9 +363,11 @@ app.post('/api/payment/create-order', async (req, res) => {
             },
             "order_meta": {
                 "return_url": `https://arekatikameat-backend1.onrender.com/api/payment/success?order_id=${orderId}`
-            }
-        };
-
+        console.log('Cashfree Config:', {
+            XClientId: CashfreeSDK.CFConfig.XClientId,
+            XClientSecret: CashfreeSDK.CFConfig.XClientSecret ? '********' : '' , // Mask secret key
+            XEnvironment: CashfreeSDK.CFConfig.XEnvironment
+        });
         const ordersApi = new CashfreeSDK.OrdersApi();
         const response = await ordersApi.createOrder("2023-08-01", request);
         res.json(response.data);

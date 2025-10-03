@@ -4,7 +4,7 @@ const Order = require('../models/orderModel');
 // Initialize Cashfree SDK
 Cashfree.XClientId = process.env.CASHFREE_CLIENT_ID;
 Cashfree.XClientSecret = process.env.CASHFREE_CLIENT_SECRET;
-Cashfree.XEnvironment = Environment.PRODUCTION; // Use SANDBOX for testing, PRODUCTION for live
+Cashfree.XEnvironment = "PRODUCTION"; // Use SANDBOX for testing, PRODUCTION for live
 
 // @desc    Create Cashfree order session
 // @route   POST /api/payment/create-order

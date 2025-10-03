@@ -2,11 +2,9 @@ const Cashfree = require('cashfree-pg');
 const Order = require('../models/orderModel');
 
 // Initialize Cashfree SDK
-Cashfree.Cashfree.init(
-  process.env.CASHFREE_CLIENT_ID,
-  process.env.CASHFREE_CLIENT_SECRET,
-  Cashfree.Environment.PRODUCTION // Use SANDBOX for testing, PRODUCTION for live
-);
+Cashfree.XClientId = process.env.CASHFREE_CLIENT_ID;
+Cashfree.XClientSecret = process.env.CASHFREE_CLIENT_SECRET;
+Cashfree.XEnvironment = Cashfree.Environment.PRODUCTION; // Use SANDBOX for testing, PRODUCTION for live
 
 // @desc    Create Cashfree order session
 // @route   POST /api/payment/create-order
@@ -42,7 +40,7 @@ const createCashfreeOrder = async (req, res) => {
       },
     };
 
-    const response = await Cashfree.Cashfree.PG.Order.create(request);
+    const response = await Cashfree.PGCreateOrder(request);
 
     if (response && response.data && response.data.payment_session_id) {
       res.status(200).json({

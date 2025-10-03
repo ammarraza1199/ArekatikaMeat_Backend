@@ -5,7 +5,7 @@ const Order = require('../models/orderModel');
 Cashfree.Cashfree.init(
   process.env.CASHFREE_CLIENT_ID,
   process.env.CASHFREE_CLIENT_SECRET,
-  Cashfree.Cashfree.Environment.PRODUCTION // Use SANDBOX for testing, PRODUCTION for live
+  Cashfree.Environment.PRODUCTION // Use SANDBOX for testing, PRODUCTION for live
 );
 
 // @desc    Create Cashfree order session

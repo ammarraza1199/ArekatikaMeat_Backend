@@ -10,7 +10,10 @@ connectDB();
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: process.env.CLIENT_ORIGIN || 'http://localhost:3000',
+  credentials: true
+}));
 app.use(express.json());
 
 app.get('/', (req, res) => {
@@ -34,6 +37,12 @@ app.use('/api/cart', cartRoutes);
 
 const paymentRoutes = require('./routes/paymentRoutes.js');
 app.use('/api/payment', paymentRoutes);
+
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error('Global error handler:', err);
+  res.status(500).json({ message: 'Something went wrong!' });
+});
 
 const PORT = process.env.PORT || 5000;
 

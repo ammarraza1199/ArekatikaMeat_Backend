@@ -7,7 +7,11 @@ const router = express.Router();
 
 const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || "http://localhost:3000";
 router.use(cors({
-  origin: CLIENT_ORIGIN,
+  origin: [
+    CLIENT_ORIGIN,
+    'https://arekattikameat.netlify.app',
+    'https://arekattikameat.netlify.app/'
+  ],
   credentials: true
 }));
 
@@ -37,7 +41,7 @@ router.post('/create-order', async (req, res) => {
         customer_phone: phone || "9999999999"
       },
       order_meta: {
-        return_url: `${CLIENT_ORIGIN}/order-confirmation?order_id={order_id}&app_order_id=${orderId}`
+        return_url: `https://arekattikameat.netlify.app/order-confirmation?order_id={order_id}&app_order_id=${orderId}`
       }
     };
 
